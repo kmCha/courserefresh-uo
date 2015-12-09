@@ -1,0 +1,28 @@
+{
+  "name": "courserefresh-uo",
+  "version": "1.0.0",
+  "description": "再也不用但是选不上水课了",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kmCha/courserefresh-uo.git"
+  },
+  "keywords": [
+    "刷课"
+  ],
+  "author": "kMchA",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/kmCha/courserefresh-uo/issues"
+  },
+  "homepage": "https://github.com/kmCha/courserefresh-uo#readme",
+  "dependencies": {
+    "del": "^2.2.0",
+    "gulp": "^3.9.0",
+    "gulp-rename": "^1.2.2",
+    "gulp-uglify": "^1.5.1"
+  }
+}
