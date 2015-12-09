@@ -106,7 +106,7 @@
                 alert("Request was unsuccessful: " + xhr.status);
             }
             count++;
-            p.innerHTML = "水课哪里跑：失败" + count + "次";
+            p.innerHTML = "水课哪里跑：尝试" + count + "次";
         }
     };
 
@@ -119,6 +119,6 @@
             p.innerHTML = "自动刷课还没开始哦，先选择学期再按一下保存的书签";
         }
     }
-
-    setInterval(submitData, 2000);
+    submitData();
+    setInterval(submitData, 3000);
 })();

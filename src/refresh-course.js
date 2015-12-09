@@ -1,4 +1,3 @@
-javascript:
 (function(){
     var addToCart = document.querySelector("#_ctl0__Template_btnCourseGo");
     if(addToCart){   //选择了学期信息add to cart按钮才会出来
