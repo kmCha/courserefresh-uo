@@ -1,5 +1,4 @@
 (function() {
-
     function serialize(form) { //序列化表单
         var parts = [],
             field = null,
@@ -84,39 +83,6 @@
         }
     }
 
-    var addToCart = document.querySelector("#_ctl0__Template_btnCourseGo");
-    var xhr = createXHR();
-    var count = 0;
-    var form = document.querySelector("form");
-    var p = document.createElement("p");
-    p.style.padding = "10px 20px";
-    p.style.border = "2px dotted #7e7e7e";
-    p.style.textAlign = "center";
-    p.style.color = "red";
-    p.style.fontSize = "2em";
-    document.querySelector("body").appendChild(p);
-    xhr.onreadystatechange = function(event) {
-        if (xhr.readyState == 4) {
-            if ((xhr.status >= 200 && xhr.status < 300) || xhr.status == 304) {
-                if (xhr.responseText.indexOf("disabled") === -1) { //响应中没有了disabled字符串，即课有位置了或者session过期了
-                    if (xhr.responseText.indexOf("Your session has expired") === -1) { //有位置了
-                        var conf = confirm("这个课有位置了，赶紧的！要自动选就按确定");
-                        if (conf === true) {
-                            addToCart.click(); //自动点击add to cart进入cart页面
-                        }
-                    } else { //session到期
-                        alert("登陆时间到了，重新登录再来吧");
-                        repeat.clearInterval();
-                    }
-                }
-            } else {
-                alert("Request was unsuccessful: " + xhr.status);
-            }
-            count++;
-            p.innerHTML = "水课哪里跑：尝试" + count + "次";
-        }
-    };
-
     function submitData() { //异步提交表单数据
         if (addToCart) { //选择了学期信息add to cart按钮才会出来，才发送请求
             xhr.open("post", form.action, true);
@@ -126,6 +92,42 @@
             p.innerHTML = "自动刷课还没开始哦，先选择学期再按一下保存的书签";
         }
     }
-    submitData();
-    var repeat = setInterval(submitData, 3000);
+
+    if(!document.querySelector("#courseInfo")){     //检查是否已经点过脚本，不允许重复运行
+        var addToCart = document.querySelector("#_ctl0__Template_btnCourseGo");
+        var xhr = createXHR();
+        var count = 0;
+        var form = document.querySelector("form");
+        var p = document.createElement("p");
+        p.style.padding = "10px 20px";
+        p.style.border = "2px dotted #7e7e7e";
+        p.style.textAlign = "center";
+        p.style.color = "red";
+        p.style.fontSize = "2em";
+        p.id = "courseInfo";
+        document.querySelector("body").appendChild(p);
+        xhr.onreadystatechange = function(event) {
+            if (xhr.readyState == 4) {
+                if ((xhr.status >= 200 && xhr.status < 300) || xhr.status == 304) {
+                    if (xhr.responseText.indexOf("disabled") === -1) { //响应中没有了disabled字符串，即课有位置了或者session过期了
+                        if (xhr.responseText.indexOf("Your session has expired") === -1) { //有位置了
+                            var conf = confirm("这个课有位置了，赶紧的！要自动选就按确定");
+                            if (conf === true) {
+                                addToCart.click(); //自动点击add to cart进入cart页面
+                            }
+                        } else { //session到期
+                            alert("登陆时间到了，重新登录再来吧");
+                            repeat.clearInterval();
+                        }
+                    }
+                } else {
+                    alert("Request was unsuccessful: " + xhr.status);
+                }
+                count++;
+                p.innerHTML = "水课哪里跑：尝试" + count + "次";
+            }
+        };
+        submitData();
+        var repeat = setInterval(submitData, 3000);
+    }
 })();
