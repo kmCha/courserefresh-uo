@@ -1,6 +1,6 @@
 var gulp = require('gulp'),
     uglify = require('gulp-uglify'),
-    del = require('del');
+    del = require('del'),
     rename = require('gulp-rename');
 
 gulp.task('scripts', function() {
@@ -14,4 +14,6 @@ gulp.task('clean', function(cb) {
     del(['dist/'], cb);
 });
 
-gulp.task('default', ['scripts']);
+gulp.task('default', ['clean'], function(cb){
+	gulp.start('scripts');
+});
