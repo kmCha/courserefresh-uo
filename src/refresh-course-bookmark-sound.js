@@ -94,17 +94,20 @@
     }
 
     if(!document.querySelector("#courseInfo")){     //检查是否已经点过脚本，不允许重复运行
-        var addToCart = document.querySelector("#_ctl0__Template_btnCourseGo");
-        var xhr = createXHR();
-        var count = 0;
-        var form = document.querySelector("form");
-        var p = document.createElement("p");
+        var addToCart = document.querySelector("#_ctl0__Template_btnCourseGo"),
+            xhr = createXHR(),
+            count = 0,
+            form = document.querySelector("form"),
+            p = document.createElement("p"),
+            box = document.createElement("div");
+
         p.style.padding = "10px 20px";
         p.style.border = "2px dotted #7e7e7e";
         p.style.textAlign = "center";
         p.style.color = "red";
         p.style.fontSize = "2em";
         p.id = "courseInfo";
+
         document.querySelector("body").appendChild(p);
         var successSound = document.createElement("audio");
         successSound.src = "http://7xoxzw.com1.z0.glb.clouddn.com/successSound.mp3"; //新闻联播(成功提示音)
@@ -114,42 +117,51 @@
         failSound.preload = "auto";
         xhr.onreadystatechange = function(event) {
             if (xhr.readyState == 4) {
-                if ((xhr.status >= 200 && xhr.status < 300) || xhr.status == 304) {
-                    if (xhr.responseText.indexOf("disabled") === -1) { //响应中没有了disabled字符串，即课有位置了或者session过期了
-                        if (xhr.responseText.indexOf("Your session has expired") === -1) { //有位置了
-                            successSound.play();
-                            var fuckSafari = setInterval(function(){   //safari中存在先弹窗再播放的bug，这样写能避免
-                                if(successSound.currentTime > 0){
-                                    var conf = confirm("这个课有位置了，赶紧的！要自动选就按确定");
-                                    if (conf === true) {
-                                        addToCart.click(); //自动点击add to cart进入cart页面
-                                        clearInterval(fuckSafari);
-                                        clearInterval(repeat);
-                                    } else {
-                                        clearInterval(repeat);
-                                        clearInterval(fuckSafari);
-                                    }
-                                }
-                            }, 100);
-                        } else { //session到期
-                            failSound.play();
-                            var fuckSafari2 = setInterval(function(){   //safari中存在先弹窗再播放的bug，这样写能避免
-                                if(failSound.currentTime > 0){
-                                    alert("登陆时间到了，重新登录再来吧");
-                                    clearInterval(repeat);
-                                    clearInterval(fuckSafari2);
-                                    p.innerHTML = "水课哪里跑：尝试" + (++count) + "次后，还是没有位置，rabaska让你重新登录了";
-                                }
-                            }, 100);
-                        }
-                    }
-                } else {
-                    alert("Request was unsuccessful: " + xhr.status);
+                if(count > 0) {
+                    document.querySelector("body").removeChild(box);
                 }
-                p.innerHTML = "水课哪里跑：尝试" + (++count) + "次";
+                if ((xhr.status >= 200 && xhr.status < 300) || xhr.status == 304) {
+                    if (xhr.responseText.indexOf("_ctl0__Template_dlstSection__ctl0_cbxSection") >= 0) { //有位置了
+                        successSound.play();
+                        var fuckSafari = setInterval(function(){   //safari中存在先弹窗再播放的bug，这样写能避免
+                            if(successSound.currentTime > 0){
+                                var conf = confirm("这个课有位置了，赶紧的！要自动选就按确定");
+                                if (conf === true) {
+                                    clearInterval(fuckSafari);
+                                    //clearInterval(repeat);
+                                    addToCart.click(); //自动点击add to cart进入cart页面
+                                } else {
+                                    //clearInterval(repeat);
+                                    clearInterval(fuckSafari);
+                                }
+                            }
+                        }, 100);
+                        return;
+                    }
+                    else if(xhr.responseText.indexOf("Your session has expired") >= 0) { //session到期
+                        failSound.play();
+                        var fuckSafari2 = setInterval(function(){   //safari中存在先弹窗再播放的bug，这样写能避免
+                            if(failSound.currentTime > 0){
+                                //clearInterval(repeat);
+                                clearInterval(fuckSafari2);
+                                alert("登陆时间到了，重新登录再来吧");
+                                p.innerHTML = "水课哪里跑：尝试" + (++count) + "次后，还是没有位置，rabaska让你重新登录了";
+                            }
+                        }, 100);
+                        return;
+                    }
+                    box.innerHTML = xhr.responseText;
+                    p.innerHTML = "水课哪里跑：尝试" + (++count) + "次";
+                    document.querySelector("body").appendChild(box);
+                    setTimeout(submitData, 1500);
+                }
+                else {
+                    //clearInterval(repeat);
+                    alert("服务器错误，刷新试试");
+                }
             }
         };
         submitData();
-        var repeat = setInterval(submitData, 3000);
+        //var repeat = setInterval(submitData, 3000);
     }
 })();

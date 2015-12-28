@@ -124,7 +124,8 @@
                         }
                     }
                 } else {
-                    alert("Request was unsuccessful: " + xhr.status);
+                    alert("服务器错误，刷新试试");
+                    clearInterval(repeat);
                 }
                 p.innerHTML = "水课哪里跑：尝试" + (++count) + "次";
             }
