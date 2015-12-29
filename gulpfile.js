@@ -3,17 +3,15 @@ var gulp = require('gulp'),
     del = require('del'),
     rename = require('gulp-rename');
 
-gulp.task('scripts', function() {
-  return gulp.src('src/*.js')
-    .pipe(rename({suffix: '.min'}))
-    .pipe(uglify())
-    .pipe(gulp.dest('dist/'));
+gulp.task('scripts', ['clean'], function() {
+  	return gulp.src('src/*.js')
+    	.pipe(rename({suffix: '.min'}))
+    	.pipe(uglify())
+    	.pipe(gulp.dest('dist/'));
 });
 
-gulp.task('clean', function(cb) {
-    del(['dist/'], cb);
+gulp.task('clean', function() {
+    return del(['dist/']);
 });
 
-gulp.task('default', ['clean'], function(cb){
-	gulp.start('scripts');
-});
+gulp.task('default', ['scripts']);
