@@ -93,7 +93,7 @@
         }
     }
 
-    if(!document.querySelector("#courseInfo")){     //检查是否已经点过脚本，不允许重复运行
+    if (!document.querySelector("#courseInfo")) { //检查是否已经点过脚本，不允许重复运行
         var addToCart = document.querySelector("#_ctl0__Template_btnCourseGo");
         var xhr = createXHR();
         var count = 0;
